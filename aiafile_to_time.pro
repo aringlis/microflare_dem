@@ -6,13 +6,13 @@ FUNCTION aiafile_to_time, f, fileset = fileset
 
 dim = n_elements(f)
 result = strarr(dim)
-default, fileset, 'aia'
+default, fileset, 'AIA'
 
 FOR i = 0, dim-1 DO BEGIN
 
 	filename = file_basename(f[i])
 	
-	IF fileset EQ 'aia' THEN BEGIN
+	IF (fileset EQ 'AIA') OR (fileset EQ 'aia') THEN BEGIN
 		year = strmid(filename,3,4)
 		month = strmid(filename,7,2)
 		day = strmid(filename,9,2)
