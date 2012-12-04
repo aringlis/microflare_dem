@@ -17,7 +17,7 @@ FOR i = 0, dim-1 DO BEGIN
 		month = strmid(filename,7,2)
 		day = strmid(filename,9,2)
 		time = strmid(filename,12,2) + ':' + strmid(filename,14,2) + ':' + strmid(filename,16,2)
-	ENDIF ELSE IF fileset EQ 'ssw_cutout' THEN BEGIN
+	ENDIF ELSE IF (fileset EQ 'ssw_cutout') OR (fileset EQ 'SSW_CUTOUT') THEN BEGIN
 		year = strmid(filename,11,4)
 		month = strmid(filename,15,2)
 		day = strmid(filename,17,2)
