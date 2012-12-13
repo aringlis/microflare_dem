@@ -1,8 +1,8 @@
-FUNCTION get_combined_chisq,chi_red_aia,chi_red_hsi
+FUNCTION get_combined_chisq,chi_red_aia,chi_red_hsi,n_aia=n_aia,n_hsi=n_hsi,nfree=nfree
 
-n_aia=6
-n_hsi=21
-nfree=3
+default,n_aia,6
+default,n_hsi,21
+default,nfree,3
 
 chi_full_aia=chi_red_aia*(n_aia-nfree)
 chi_full_hsi=chi_red_hsi*(n_hsi-nfree)
