@@ -43,10 +43,10 @@ default,uncert,0.02
 
 default,erange,[5,12]
 
-spec_file='hsi_spectrum_20110826_200140_d1.fits'
-drm_file='hsi_srm_20110826_200140_d1.fits'
-fit_time=['26-Aug-2011 20:53:00.000', '26-Aug-2011 20:54:00.000']
-bkg_time=['26-Aug-2011 20:34:00.000', '26-Aug-2011 20:38:00.000']
+default,spec_file,'hsi_spectrum_20110826_200140_d1.fits'
+default,drm_file,'hsi_srm_20110826_200140_d1.fits'
+default,fit_time,['26-Aug-2011 20:53:00.000', '26-Aug-2011 20:54:00.000']
+default,bkg_time,['26-Aug-2011 20:34:00.000', '26-Aug-2011 20:38:00.000']
 
 
 ;want to input the model flux from aia_hsi_fit_results.sav

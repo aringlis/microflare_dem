@@ -74,10 +74,13 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 c_index=where(chi_red_combo lt 3.0)
+IF c_index ne -1 THEN BEGIN
 print,'Combined chi-squared values < 3: ', chi_red_combo[c_index]
 print,'Associated AIA chi-squareds: ', chi_red_aia[c_index]
 print,'Associated HSI chi-squareds: ', chi_red_hsi[c_index]
-
+ENDIF ELSE BEGIN
+print,'No combined chi-squared values found < 3.0'
+ENDELSE
 
 print,'combined reduced chi-squared minimum value is :',chi_red_best
 print,'located at: ',p2
