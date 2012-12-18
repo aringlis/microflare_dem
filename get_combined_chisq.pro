@@ -73,9 +73,17 @@ ENDIF ELSE BEGIN
 	chi_red_best = chi_red_combo[p2[0],p2[1]]
 ENDELSE
 
+c_index=where(chi_red_combo lt 3.0)
+print,'Combined chi-squared values < 3: ', chi_red_combo[c_index]
+print,'Associated AIA chi-squareds: ', chi_red_aia[c_index]
+print,'Associated HSI chi-squareds: ', chi_red_hsi[c_index]
+
 
 print,'combined reduced chi-squared minimum value is :',chi_red_best
 print,'located at: ',p2
+
+;IF (chi_red_aia[p2[0],p2[1]] lt 3.0) THEN print,'AIA criterion FULFILLED (X^2 < 3.0)' ELSE print,'AIA criterion FAILED (X^2 > 3.0)'
+
 print,'Returning combined reduced chi-squared map.'
 
 ;return the combined reduced chi-squared map or value.
