@@ -158,14 +158,20 @@ f = file_search(teem_table)
 file_list = get_aia_file_list(dir, fileset = fileset)
 FOR i = 0, nwave-1 DO nfiles[i] = n_elements(file_list[*,i])
 
-;this is the time where we want to extract a set of 6 AIA images
-aia_time=anytim(fit_time[0],/utime)
+;this is the start time where we want to begin extracting sets of 6 AIA images
+aia_start_time=anytim(fit_time[0],/utime)
+;this is the end time where we want to stop extracting sets of 6 AIA images
+aia_end_time=anytim(fit_time[1],/utime)
 
-;find the closest time to AIA_TIME available from the AIA data files. MARKER stores the array index of this
+;find the closest start time to AIA_TIME available from the AIA data files. MARKER stores the array index of this
 filetimes=anytim(aiafile_to_time(file_list[*,0], fileset=fileset),/utime)
-marker=value_locate(filetimes,aia_time)
+startmarker=value_locate(filetimes,aia_start_time)
+endmarker=value_locate(filetimes,aia_end_time)
 
-print,'AIA selected time is: ',anytim(filetimes(marker),/vms)
+;
+
+print,'AIA selected start time is: ',anytim(filetimes(startmarker),/vms)
+print,'AIA selected end time is: ',anytim(filetimes(endmarker),/vms)
 
 ;find the area of 1 AIA pixel in cm^2
 aia_pixel_area = aia_teem_pixel_area(file_list[0,0])
@@ -190,7 +196,7 @@ IF f[0] EQ '' OR keyword_set(FORCE_TABLE) THEN aia_teem_table, wave_, tsig, telo
 ; if a hsi_image was given then create a mask out of it
 ;IF hsi_image[0] NE '' THEN BEGIN
 IF keyword_set(hsi_image) THEN BEGIN
-	fits2map, file_list[marker,0], aiamap
+	fits2map, file_list[startmarker,0], aiamap
 	fits2map, hsi_image, hsimap
 	; interpolate the rhessi map to the aia map
 	
@@ -210,7 +216,7 @@ IF keyword_set(hsi_image) THEN BEGIN
 	invmask_map.data[complement] = 0
 ENDIF ELSE BEGIN
 	;if no RHESSI image, then by default entire AIA map is used
-	fits2map,file_list[marker,0], mask_map
+	fits2map,file_list[startmarker,0], mask_map
 	mask_map.data[*] = 1
 ENDELSE
 
@@ -218,75 +224,93 @@ nwave = n_elements(wave_)
 flux_ = fltarr(nwave)
 texp_ = fltarr(nwave)
 
-file_iw = reform(file_list[marker,*])
+
 
 ;file_bk_iw = reform(file_list(marker-100,*))
 
-;now we are ready to read the 6 AIA data files at the time of interest
+;now we are ready to read the AIA data files at the time of interest
 ;---------------------------------------------------------------------
-FOR iw = 0, nwave-1 DO BEGIN
+
+;need to loop over the RHESSI fit interval and average the AIA image sets within that interval
+flux_all=fltarr(nwave)
+flux_all[*]=0.
+FOR pp = startmarker,endmarker DO BEGIN
+
+	file_iw = reform(file_list[pp,*])
+
+	FOR iw = 0, nwave-1 DO BEGIN
 	 
-	read_sdo,file_iw[iw],index,data
-;	read_sdo,file_bk_iw[iw],index_bk,data_bk
+		read_sdo,file_iw[iw],index,data
+;		read_sdo,file_bk_iw[iw],index_bk,data_bk
 
-        index2map,index,float(data),map
-;	index2map,index_bk,float(data_bk),map_bk
+        	index2map,index,float(data),map
+;		index2map,index_bk,float(data_bk),map_bk
 	
-	;------------------------------------------------------------------------------------------
-	;sometimes image dimensions can vary slightly between EUV wavelengths. Perform a check here	
-	mask_dim=size(mask_map.data)
-	image_dim=size(map.data)
+		;------------------------------------------------------------------------------------------
+		;sometimes image dimensions can vary slightly between EUV wavelengths. Perform a check here	
+		mask_dim=size(mask_map.data)
+		image_dim=size(map.data)
 
-	;if mask dimensions don't match with the latest image then congrid the mask to compensate
-	IF (mask_dim[1] ne image_dim[1]) OR (mask_dim[2] ne image_dim[2]) THEN BEGIN
-		mask_map=rebin_map(mask_map,image_dim[1],image_dim[2])
-		;only want binary values in mask
-		for a=0,image_dim[1]-1 do begin
-			for b=0,image_dim[2]-1 do begin
-				IF (mask_map.data[a,b] gt 0.5) THEN mask_map.data[a,b] = 1.0 ELSE mask_map.data[a,b]=0.0
+		;if mask dimensions don't match with the latest image then congrid the mask to compensate
+		IF (mask_dim[1] ne image_dim[1]) OR (mask_dim[2] ne image_dim[2]) THEN BEGIN
+			mask_map=rebin_map(mask_map,image_dim[1],image_dim[2])
+			;only want binary values in mask
+			for a=0,image_dim[1]-1 do begin
+				for b=0,image_dim[2]-1 do begin
+					IF (mask_map.data[a,b] gt 0.5) THEN mask_map.data[a,b] = 1.0 ELSE mask_map.data[a,b]=0.0
+				endfor
 			endfor
-		endfor
-		;print a warning message that a congrid was performed
-		print,' '
-		print,'------------------------------------------------------------------------------------'
-		print,'Warning: image dimensions changed between wavelengths. Mask map had to be rebinned.'
-		print,'------------------------------------------------------------------------------------'
-	ENDIF
+			;print a warning message that a congrid was performed
+			print,' '
+			print,'------------------------------------------------------------------------------------'
+			print,'Warning: image dimensions changed between wavelengths. Mask map had to be rebinned.'
+			print,'------------------------------------------------------------------------------------'
+		ENDIF
 	
 
-	;------------------------------------------------------------------------------------------
+		;------------------------------------------------------------------------------------------
 
-	IF keyword_set(xrange) AND keyword_set(yrange) THEN BEGIN
-	    sub_map, map, smap, xrange = xrange, yrange = yrange
-	    map = smap
-	    data = smap.data
-	    ;also need to create a sub map for the mask
-	    sub_map, mask_map, smask_map, xrange = xrange, yrange = yrange
-	    mask_map = smask_map
-   	ENDIF
+		IF keyword_set(xrange) AND keyword_set(yrange) THEN BEGIN
+	    		sub_map, map, smap, xrange = xrange, yrange = yrange
+	    		map = smap
+	    		data = smap.data
+	    		;also need to create a sub map for the mask
+	    		sub_map, mask_map, smask_map, xrange = xrange, yrange = yrange
+	    		mask_map = smask_map
+   		ENDIF
     
-	s = size(data)
-	i1=0 & j1=0 & i2=s[1]-1 & j2=s[2]-1
+		s = size(data)
+		i1=0 & j1=0 & i2=s[1]-1 & j2=s[2]-1
 
-	image = data
-	texp = map.dur
-	texp_[iw]=texp 
-	dateobs = map.time	
+		image = data
+		texp = map.dur
+		texp_[iw]=texp 
+		dateobs = map.time	
 	
-	IF keyword_set(mask_map) then begin
-		mask = mask_map.data
-		; zero out everything that is not in the mask
-		FOR k = 0, i2 DO BEGIN
-			FOR l = 0, j2 DO BEGIN
-				data[k,l] = data[k,l]*mask[k,l]
-;				data_bk[k,l] = data_bk[k,l] * mask[k,l]
-			ENDFOR
-		ENDFOR	
-	ENDIF
+		IF keyword_set(mask_map) then begin
+			mask = mask_map.data
+			; zero out everything that is not in the mask
+			FOR k = 0, i2 DO BEGIN
+				FOR l = 0, j2 DO BEGIN
+					data[k,l] = data[k,l]*mask[k,l]
+;					data_bk[k,l] = data_bk[k,l] * mask[k,l]
+				ENDFOR
+			ENDFOR	
+		ENDIF
 	
-	flux_[iw] = total(data[i1:i2,j1:j2])/texp; - (total(data_bk[i1:i2,j1:j2])/map_bk.dur)
-	print,'Total flux in ', wave_(iw),flux_(iw)
+		flux_[iw] = total(data[i1:i2,j1:j2])/texp; - (total(data_bk[i1:i2,j1:j2])/map_bk.dur)
+		print,'Total flux in ', wave_(iw),flux_(iw)
+	ENDFOR
+
+;add up all the fluxes in the RHESSI fit interval
+flux_all=flux_all + flux_
+
 ENDFOR
+
+;find the average AIA flux in each channel during the RHESSI fit interval
+flux_ave=flux_all / ((endmarker - startmarker) + 1)
+
+
 
 ;now work out the area of the region of interest by finding out how many '1' pixels are under the mask
 ;-----------------------------------------------------------------------------------------------------
@@ -311,7 +335,8 @@ nfree=3
 
 
 ;flux_obs = reform(images[i,j,*])
-		flux_obs = flux_ / num_aia_pixels
+		;flux_obs = flux_ / num_aia_pixels
+		flux_obs = flux_ave / num_aia_pixels
 		counts = flux_obs*texp_
 		;stop
 		;when we sum pixels up the noise level gets very low - but not realistic, due to uncertainty in T response functions. Set a baseline uncertainty level.
