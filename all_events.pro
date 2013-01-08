@@ -50,10 +50,10 @@ CASE event of
 	bkg_time = ['10-Sep-2012 07:08:00.000', '10-Sep-2012 07:12:00.000']
    END
 9: BEGIN
-	spec_file = 'hsi_spectrum_20110716_161036_d1.fits'
-	drm_file = 'hsi_srm_20110716_161036_d1.fits'
-	fit_time = ['16-Jul-2011 17:02:00.000', '16-Jul-2011 17:03:00.000'] 
-	bkg_time = ['16-Jul-2011 17:36:00.000', '16-Jul-2011 17:39:00.000']
+	spec_file = 'hsi_spectrum_20120915_212508_d1.fits'
+	drm_file = 'hsi_srm_20120915_212508_d1.fits'
+	fit_time = ['15-Sep-2012 22:44:00.000', '15-Sep-2012 22:45:00.000'] 
+	bkg_time = ['15-Sep-2012 22:30:00.000', '15-Sep-2012 22:34:00.000']
    END
 10:BEGIN
 	spec_file = 'hsi_spectrum_20120927_053956_d1.fits'
