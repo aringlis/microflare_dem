@@ -7,7 +7,7 @@
 ;CATEGORY:
 ;	SPECTRA, XRAYS, STATISTICS
 ;CALLING SEQUENCE:
-;	get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n
+;	get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor
 ;
 ;PREREQUISITES:
 ;	An IDL save file called aia_hsi_fit_results_epstein.sav needs to exist in the local directory.
@@ -24,10 +24,13 @@
 ;	FIT_TIME - the time over which the RHESSI fit was performed.
 ;	BKG_TIME - the time denoting the chosen RHESSI background interval.
 ;	UNCERT - the level of systematic uncertainty. Default is 0.02 (2%).
+;	EMFACTOR - if the value of EM_0 has changed, use this to modify the RHESSI model flux. The model flux will be multiplied by the value of EMFACTOR. 
+;		Hence if the new value of EM_0 is half the original, EMFACTOR = 0.5
 ;OUTPUTS:
 ;	CHISQ_RESULTS - a 2D array containing the RHESSI reduced chi-squared for each iteration of the fit parameters.
 ;WRITTEN:
 ;	Andrew Inglis - 2012/12/13
+;	Andrew Inglis - 2013/01/09 - added EMFACTOR to allow recalculation of chi-squared with a different value of EM_0.
 ;	
 ;
 
@@ -35,7 +38,7 @@
 
 
 
-PRO get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert
+PRO get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor
 
 default,epstein,1
 default,n,10
@@ -63,8 +66,11 @@ ENDIF ELSE BEGIN
 	ah=aia_hsi_fit_results
 ENDELSE
 
-model_flux_array=ah.model_count_flux_hsi
-
+IF keyword_set(emfactor) THEN BEGIN
+	model_flux_array=ah.model_count_flux_hsi * emfactor
+ENDIF ELSE BEGIN
+	model_flux_array=ah.model_count_flux_hsi
+ENDELSE
 
 ;now need to get the object associated with the real data. Just do this once by calling get_hsi_table_entry (param values don't matter) and retrieving the info.
 
