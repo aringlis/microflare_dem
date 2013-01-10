@@ -32,6 +32,14 @@ get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_fi
 
 r=get_combined_chisq(a.chi_2d,chisq_results,n_aia=6,n_hsi=12)
 
+read,tmp1,prompt='Input first index for best combined fit:'
+read,tmp2,prompt='Input second index for best combined fit:'
+combobest=[tmp1,tmp2]
+
+replot_hsi_count_spectrum_from_dem,epstein=epstein,type='combo',chisq_results=chisq_results,combobest=combobest,emfactor=emfactor,/ps
+replot_aia_flux_ratios,combobest=combobest,/outps
+replot_combo_dem,n=1,epstein=epstein,combobest=combobest,emfactor=emfactor,chisq_results=chisq_results
+
 ;DO EPSTEIN RECALCULATIONS
 ;--------------------------------------------------------------------------------------
 
@@ -51,6 +59,27 @@ get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_fi
 
 re=get_combined_chisq(a.chi_2d,chisq_results,n_aia=6,n_hsi=12)
 
+read,tmp1,prompt='Input first index for best combined fit:'
+read,tmp2,prompt='Input second index for best combined fit:'
+combobest=[tmp1,tmp2]
 
+replot_hsi_count_spectrum_from_dem,epstein=epstein,type='combo',chisq_results=chisq_results,combobest=combobest,emfactor=emfactor,/ps
+replot_aia_flux_ratios,/epstein,combobest=combobest,/outps
+replot_combo_dem,n=10,epstein=epstein,combobest=combobest,emfactor=emfactor,chisq_results=chisq_results
+
+
+;DO SOME PLOTTING
+;---------------------------------------------------------------------------------------
+;c=min(re,loc)
+;combobest=array_indices(re,loc)
+
+;replot,hsi_count_spectrum_from_dem,epstein=epstein,type='combo',chisq_results=chisq_results,combobest=combobest,emfactor=emfactor
+;replot_aia_flux_ratios,/epstein,combobest=[12,45],/outps
+
+;c=min(r,loc)
+;combobest=array_indices(r,loc)
+;epstein=0
+;replot,hsi_count_spectrum_from_dem,epstein=epstein,type='combo',chisq_results=chisq_results,combobest=combobest,emfactor=emfactor
+;replot_aia_flux_ratios,combobest=[12,45],/outps
 
 END
