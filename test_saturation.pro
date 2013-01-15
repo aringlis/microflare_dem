@@ -1,4 +1,4 @@
-PRO test_saturation,filenames,sat_nums,tot_nums,sat_percents,xrange=xrange,yrange=yrange,hsi_image=hsi_image
+PRO test_saturation,filenames,sat_nums,tot_nums,sat_percents,xrange=xrange,yrange=yrange,hsi_image=hsi_image,quiet=quiet
 
 length=n_elements(filenames)
 sat_nums=fltarr(length)
@@ -63,12 +63,14 @@ FOR n=0,length-1 do begin
 	sat_num=total(saturation_array)
 
 	sat_percent=(sat_num/tot_num) * 100.
+	IF NOT keyword_set(quiet) THEN BEGIN
 	print,' '
 	print,'number of saturated pixels in image is: ',sat_num
 	print,'total number of pixels in image is: ',tot_num
 	print,'percentage of saturated pixels in image is: ',sat_percent
 	print,' '
-
+	ENDIF
+	
 	sat_nums[n]=sat_num
 	tot_nums[n]=tot_num
 	sat_percents[n]=sat_percent
