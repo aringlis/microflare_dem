@@ -1,4 +1,4 @@
-PRO test_saturation,filenames,sat_nums,tot_nums,sat_percents,xrange=xrange,yrange=yrange,hsi_image=hsi_image,quiet=quiet
+PRO test_saturation,filenames,sat_nums,tot_nums,sat_percents,t,xrange=xrange,yrange=yrange,hsi_image=hsi_image,quiet=quiet
 
 length=n_elements(filenames)
 sat_nums=fltarr(length)
