@@ -1,12 +1,33 @@
-PRO test_saturation,filenames,sat_nums,tot_nums,sat_percents,t,xrange=xrange,yrange=yrange,hsi_image=hsi_image,quiet=quiet
+PRO test_saturation,filenames,sat_nums,tot_nums,sat_percents,t,xrange=xrange,yrange=yrange,hsi_image=hsi_image,quiet=quiet,fit_time=fit_time
 
-length=n_elements(filenames)
-sat_nums=fltarr(length)
-tot_nums=fltarr(length)
-sat_percents=fltarr(length)
-t=fltarr(length)
+IF keyword_set(fit_time) THEN BEGIN
+	filetimes=anytim(aiafile_to_time(filenames[*], fileset='AIA'),/utime)
+	start_time=anytim(fit_time[0],/utime)
+	end_time=anytim(fit_time[1],/utime)
 
-FOR n=0,length-1 do begin
+	start=value_locate(filetimes,start_time)
+	ende=value_locate(filetimes,end_time)
+
+
+	length=n_elements(filetimes[start:ende])
+	sat_nums=fltarr(length)
+	tot_nums=fltarr(length)
+	sat_percents=fltarr(length)
+	t=fltarr(length)
+
+ENDIF ELSE BEGIN
+	length=n_elements(filenames)
+	start=0
+	ende=length-1
+
+	sat_nums=fltarr(length)
+	tot_nums=fltarr(length)
+	sat_percents=fltarr(length)
+	t=fltarr(length)
+ENDELSE
+
+;FOR n=0,length-1 do begin
+FOR n=start,ende do begin
 
 	read_sdo,filenames[n],index,data
 	index2map,index,data,map
@@ -71,10 +92,10 @@ FOR n=0,length-1 do begin
 	print,' '
 	ENDIF
 	
-	sat_nums[n]=sat_num
-	tot_nums[n]=tot_num
-	sat_percents[n]=sat_percent
-	t[n]=anytim(index.date_obs)
+	sat_nums[n-start]=sat_num
+	tot_nums[n-start]=tot_num
+	sat_percents[n-start]=sat_percent
+	t[n-start]=anytim(index.date_obs)
 
 ENDFOR
 
