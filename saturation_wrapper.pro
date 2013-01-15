@@ -32,12 +32,12 @@ t_max_0335=t[in]
 
 print,'Worst saturation percentage for each wavelength:'
 print,'--------------------------------------------------'
-print,'94A : ',sat_per_max_0094,' located at: ',anytim(t_max_0094)
-print,'131A: ',sat_per_max_0131,' located at: ',anytim(t_max_0131)
-print,'171A: ',sat_per_max_0171,' located at: ',anytim(t_max_0171)
-print,'193A: ',sat_per_max_0193,' located at: ',anytim(t_max_0193)
-print,'211A: ',sat_per_max_0211,' located at: ',anytim(t_max_0211)
-print,'335A: ',sat_per_max_0335,' located at: ',anytim(t_max_0335)
+print,'94A : ',sat_per_max_0094,' located at: ',anytim(t_max_0094,/vms)
+print,'131A: ',sat_per_max_0131,' located at: ',anytim(t_max_0131,/vms)
+print,'171A: ',sat_per_max_0171,' located at: ',anytim(t_max_0171,/vms)
+print,'193A: ',sat_per_max_0193,' located at: ',anytim(t_max_0193,/vms)
+print,'211A: ',sat_per_max_0211,' located at: ',anytim(t_max_0211,/vms)
+print,'335A: ',sat_per_max_0335,' located at: ',anytim(t_max_0335,/vms)
 
 SAVE,sat_per_max_0094,sat_per_max_0131,sat_per_max_0171,sat_per_max_0193,sat_per_max_0211,sat_per_max_0335, $
 t_max_0094,t_max_0131,t_max_0171,t_max_0193,t_max_0211,t_max_0335,filename='saturation_results.sav'
