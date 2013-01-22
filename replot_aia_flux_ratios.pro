@@ -99,15 +99,19 @@ ENDIF
 		device,encaps=1,color=1,filename=fname
 	ENDIF
 	loadct,39
+
+	error=(0.2* a.flux_obs)
+	frac_error=error/a.flux_obs
+
 	plot,findgen(6)+1,a.flux_dem_3d[pos[0],pos[1],*]/a.flux_obs,psym=4,symsize=2,charsize=1.5,xrange=[0,7],xticks=7, $
-	xtickname=[' ','131A','171A','193A','211A','335A','94A',' '],ytitle=textoidl('flux_{model}/flux_{obs}'),yran=[0.0,2.5], charthick=2,thick=2,xthick=2,ythick=2
+	xtickname=[' ','131A','171A','193A','211A','335A','94A',' '],ytitle=textoidl('flux_{model}/flux_{obs}'),yran=[0.0,2.5], charthick=3,thick=3,xthick=3,ythick=3
 	
-	oploterr,findgen(6)+1,a.flux_dem_3d[pos[0],pos[1],*]/a.flux_obs,findgen(6)*0 + 0.2,psym=4,symsize=2,thick=2
+	oploterr,findgen(6)+1,a.flux_dem_3d[pos[0],pos[1],*]/a.flux_obs,frac_error*(a.flux_dem_3d[pos[0],pos[1],*]/a.flux_obs),psym=4,symsize=2,thick=3
 	oplot,findgen(10),findgen(10)*0 + 1,linestyle=2,thick=3,color=240
 	
 	leg = [(textoidl('\chi^2_{aia} = ' + num2str(chi_label,length=4))), ('EM = '+ num2str(alog10(a.em_2d[pos[0],pos[1]]),length=4) $
 	+', log T = '+num2str(a.telog[pos[0]],length=4) + ', ' + textoidl('\sigma') + ' = ' + num2str(a.tsig[pos[1]],length=4))]; + '[' + num2str(alog10(ah.em_2d[pos[0],pos[1]])) +',' + num2str(ah.telog[pos[0]]) + ',' + num2str(ah.tsig[pos[1]]) + ']'
-	legend, leg,charsize=1.2,/top,/left,thick=2,charthick=2
+	legend, leg,charsize=1.2,/top,/left,thick=3,charthick=3
 	
 	IF keyword_set(OUTPS) THEN BEGIN
 		device,/close
