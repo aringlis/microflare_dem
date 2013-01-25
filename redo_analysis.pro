@@ -1,13 +1,13 @@
-PRO redo_analysis,event
+PRO redo_analysis,event,dir=dir
 
 ;load the important information for the event in question
 all_events,event,image_file,spec_file,drm_file,fit_time,bkg_time
-
+default,dir,''
 
 ;now redo the AIA analysis using averaged AIA data, for both the Gaussian and Epstein DEM functions
-aia_hsi_dem_analysis,dir='',fileset='AIA',/force_table,hsi_image=image_file,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,/aia_only
+aia_hsi_dem_analysis,dir=dir,fileset='AIA',/force_table,hsi_image=image_file,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,/aia_only
 
-aia_hsi_dem_analysis,dir='',fileset='AIA',/force_table,hsi_image=image_file,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,/epstein,/aia_only,n=10
+aia_hsi_dem_analysis,dir=dir,fileset='AIA',/force_table,hsi_image=image_file,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,/epstein,/aia_only,n=10
 
 ;DO GAUSSIAN RECALCULATIONS
 ;--------------------------------------------------------------------------------------
