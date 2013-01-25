@@ -30,7 +30,7 @@ emfactor=a.em_2d[0,0]/ah.em_2d[0,0]
 
 get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor
 
-r=get_combined_chisq(a.chi_2d,chisq_results,n_aia=6,n_hsi=12)
+r=get_combined_chisq(a.chi_2d^2,chisq_results,n_aia=6,n_hsi=12)
 
 read,tmp1,prompt='Input first index for best combined fit:'
 read,tmp2,prompt='Input second index for best combined fit:'
@@ -57,7 +57,7 @@ emfactor=a.em_2d[0,0]/ah.em_2d[0,0]
 
 get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor
 
-re=get_combined_chisq(a.chi_2d,chisq_results,n_aia=6,n_hsi=12)
+re=get_combined_chisq(a.chi_2d^2,chisq_results,n_aia=6,n_hsi=12)
 
 read,tmp1,prompt='Input first index for best combined fit:'
 read,tmp2,prompt='Input second index for best combined fit:'
