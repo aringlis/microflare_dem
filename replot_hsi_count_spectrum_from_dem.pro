@@ -24,7 +24,7 @@ tloc=value_locate(f.telog,f.telog_best)
 sigloc=value_locate(f.tsig,f.sig_best)
 
 aia_spec=a.model_count_flux_hsi[tloc,sigloc,*]*emfactor
-aia_sigma=sigma_array[tloc,sigloc]
+aia_sigma=sigma_array[tloc,sigloc,*]
 
 ;find the best-fit combo parameters and assign the model spectrum
 pos=[combobest[0],combobest[1]]
@@ -32,13 +32,13 @@ pos=[combobest[0],combobest[1]]
 ;m=min(chi_combo,pos)
 ;pos=array_indices(chi_combo,pos)
 combo_spec=a.model_count_flux_hsi[pos[0],pos[1],*]*emfactor
-combo_sigma=sigma_array[pos[0],pos[1]]
+combo_sigma=sigma_array[pos[0],pos[1],*]
 
 ;find the best-fit RHESSI parameters and assign the model spectrum
 m=min(chisq_results,hsipos)
 hsipos=array_indices(chisq_results,hsipos)
 hsi_spec=a.model_count_flux_hsi[hsipos[0],hsipos[1],*] * emfactor
-hsi_sigma=sigma_array[hsipos[0],hsipos[1]]
+hsi_sigma=sigma_array[hsipos[0],hsipos[1],*]
 
 ;xticks=[' ',' ','5',' ',' ',' ',' ','10']
 
@@ -78,7 +78,7 @@ loadct,39
 plot,a.axis[0,*],a.real_count_flux_hsi[1,1,*],/xlog,/ylog,thick=3,xthick=3,ythick=3,xrange=[3,12],yrange=yrange,linestyle=3,charsize=1.5, $
 xtitle='energy (keV)',ytitle='counts s!U-1!N cm!U-2!N kev!U-1!N',xstyle=1,ystyle=1,charthick=3,/nodata 
 oplot,a.axis[0,*],a.real_count_flux_hsi[1,1,*],thick=3,color=50,linestyle=3
-oploterr,a.axis[0,*],a.real_count_flux_hsi[1,1,*],err,psym=0,thick=3,linestyle=3,color=50,errcolor=50
+oploterr,a.axis[0,*],a.real_count_flux_hsi[1,1,*],err,psym=3,thick=3,linestyle=3,color=50,errcolor=50
 oplot,a.axis[0,*],model,thick=3,color=240
 
 ;show the fitting range on the plot
