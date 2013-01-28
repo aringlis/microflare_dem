@@ -28,7 +28,7 @@ a=aia_fit_results
 ;find the ratio of EM_0 (new) / EM_0 (old) - use this to modify RHESSI model fluxes.
 emfactor=a.em_2d[0,0]/ah.em_2d[0,0]
 
-get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor
+get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor,sigma_array=sigma_array
 
 r=get_combined_chisq(a.chi_2d^2,chisq_results,n_aia=6,n_hsi=12)
 
@@ -36,7 +36,7 @@ read,tmp1,prompt='Input first index for best combined fit:'
 read,tmp2,prompt='Input second index for best combined fit:'
 combobest=[tmp1,tmp2]
 
-replot_hsi_count_spectrum_from_dem,epstein=epstein,type='combo',chisq_results=chisq_results,combobest=combobest,emfactor=emfactor,/ps
+replot_hsi_count_spectrum_from_dem,epstein=epstein,type='combo',chisq_results=chisq_results,combobest=combobest,emfactor=emfactor,/ps,sigma_array=sigma_array
 replot_aia_flux_ratios,combobest=combobest,/outps
 replot_combo_dem,n=10,epstein=epstein,combobest=combobest,emfactor=emfactor,chisq_results=chisq_results
 
