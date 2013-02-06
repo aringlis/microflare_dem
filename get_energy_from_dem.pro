@@ -11,7 +11,7 @@ area=double(area)
 rad_loss,rad_temps,loss,density=1e11
 
 ;interpolate the radiative loss function before performing integral
-rlossfunction=interpol(rad_loss,rad_temps,temp_lin,/quadratic)
+rlossfunction=interpol(loss,rad_temps,temp_lin,/quadratic)
 
 total_energy_per_sec=int_tabulated(temp_lin,(rlossfunction*dem*area))
 
