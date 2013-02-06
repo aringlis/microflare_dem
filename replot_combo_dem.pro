@@ -40,7 +40,6 @@ telog_best_combo=telog(pos[0])
 tsig_best_combo=tsig(pos[1])
 em_best_combo=a.em_2d[pos[0],pos[1]]
 
-
 ;plot the dems
 aia_dem=get_dem_from_params(telog,[(10^(a.em_best)),a.telog_best,a.sig_best],n=n,epstein=epstein)
 

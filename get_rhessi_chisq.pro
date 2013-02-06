@@ -38,7 +38,7 @@
 
 
 
-PRO get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor
+PRO get_rhessi_chisq,erange,chisq_results,epstein=epstein,spec_file=spec_file,drm_file=drm_file,fit_time=fit_time,bkg_time=bkg_time,n=n,uncert=uncert,emfactor=emfactor,sigma_array=sigma_array
 
 default,epstein,1
 default,n,10
@@ -109,6 +109,7 @@ ltime=ltime.ltime[0]
 
 sz=size(model_flux_array)
 chisq_results=fltarr(sz[1],sz[2])
+sigma_array=fltarr(sz[1],sz[2],sz[3])
 
 
 for i=0,sz[1] -1 do begin
@@ -143,6 +144,7 @@ for i=0,sz[1] -1 do begin
 		chisq_red = total(values)/(npoints-1)
 
 		chisq_results[i,j]=chisq_red
+		sigma_array[i,j,*]=sigma_tot_rate/(summary.spex_summ_area * 0.353605)
 
 	endfor
 endfor

@@ -340,7 +340,7 @@ nfree=3
 		counts = flux_obs*texp_
 		;stop
 		;when we sum pixels up the noise level gets very low - but not realistic, due to uncertainty in T response functions. Set a baseline uncertainty level.
-		noise = 0.2*flux_obs;sqrt(counts)/texp_
+		noise = sqrt((0.2*flux_obs)^2 + (sqrt(counts) /texp_)^2);sqrt(counts)/texp_
 
 		chimin = 9999.
 		chi6min = 9999.
