@@ -40,10 +40,11 @@ telog_best_combo=telog(pos[0])
 tsig_best_combo=tsig(pos[1])
 em_best_combo=a.em_2d[pos[0],pos[1]]
 
+stop
 ;plot the dems
 aia_dem=get_dem_from_params(telog,[(10^(a.em_best)),a.telog_best,a.sig_best],n=n,epstein=epstein)
 
-hsi_dem=get_dem_from_params(telog,[hsi_emconvert,hsi_telog,hsi_tsig],n=n,epstein=epstein)
+;hsi_dem=get_dem_from_params(telog,[hsi_emconvert,hsi_telog,hsi_tsig],n=n,epstein=epstein)
 
 combo_dem=get_dem_from_params(telog,[(em_best_combo),telog_best_combo,tsig_best_combo],n=n,epstein=epstein)
 
@@ -59,11 +60,11 @@ ENDELSE
 loadct,39
 plot,telog,alog10(aia_dem),thick=3,xthick=3,ythick=3,charthick=3,charsize=1.5,linestyle=0,yrange=[18,23],ytitle='log EM (cm!U-5!N K!U-1!N)',xtitle = 'log T (K)',/nodata
 oplot,telog,alog10(aia_dem),thick=3,color=240
-oplot,telog,alog10(hsi_dem),thick=3,linestyle=2
+;oplot,telog,alog10(hsi_dem),thick=3,linestyle=2
 
 oplot,telog,alog10(combo_dem),thick=3,linestyle=0,color=50
 
-ssw_legend,['AIA','HSI','AIA and HSI'],linestyle=[0,2,0],thick=[3,3,3],color=[240,0,50],/right,charsize=1.2,charthick=3
+ssw_legend,['AIA only','AIA and HSI'],linestyle=[0,0],thick=[3,3],color=[240,50],/right,charsize=1.2,charthick=3
 device,/close
 ;set_plot,'x'
 
